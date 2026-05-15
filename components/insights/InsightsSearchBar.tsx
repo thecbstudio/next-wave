@@ -61,7 +61,7 @@ export function InsightsSearchBar({
           {/* Submit */}
           <motion.button
             whileTap={{ scale: 0.97 }}
-            onClick={onSubmit}
+            onClick={() => onSubmit()}
             disabled={analyzing || (!query.trim() && !imagePreviewUrl)}
             className="flex flex-1 sm:flex-initial items-center justify-center gap-2 rounded-xl bg-[hsl(var(--primary))] px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-[hsl(262_72%_50%/0.25)] transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
