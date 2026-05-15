@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
   TrendingUp, ArrowLeft, RefreshCcw, GitCompare,
   BarChart2, Zap, MessageCircle, SquarePen, Settings,
-  ArrowRight, Trophy, Minus, LogOut,
+  ArrowRight, Trophy, Minus, LogOut, Trash2,
 } from "lucide-react"
 import Link from "next/link"
 import {
@@ -68,7 +68,7 @@ function timeAgo(iso: string): string {
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
 function CompareSidebar() {
-  const { sessions } = useChatHistory()
+  const { sessions, deleteSession } = useChatHistory()
 
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
@@ -119,19 +119,6 @@ function CompareSidebar() {
         </nav>
       </div>
 
-      <div className="mt-4 px-3">
-        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">Popular</p>
-        <div className="space-y-0.5">
-          {POPULAR.slice(0, 4).map(s => (
-            <Link key={s.label} href={`/compare?a=${encodeURIComponent(s.a)}&b=${encodeURIComponent(s.b)}`}
-              className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-[hsl(var(--muted-foreground))] transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-            >
-              <GitCompare className="h-3 w-3 shrink-0 opacity-50" />{s.label}
-            </Link>
-          ))}
-        </div>
-      </div>
-
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3">
         <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">Recent</p>
         {sessions.length === 0 ? (
@@ -139,18 +126,29 @@ function CompareSidebar() {
         ) : (
           <nav className="space-y-0.5">
             {sessions.map((session: ChatSession) => (
-              <Link
+              <div
                 key={session.id}
-                href={`/?session=${session.id}`}
-                className="flex w-full flex-col rounded-lg px-2.5 py-2 transition-colors hover:bg-[hsl(var(--muted))]"
+                className="group flex w-full items-center gap-1 rounded-lg transition-colors hover:bg-[hsl(var(--muted))]"
               >
-                <p className="truncate text-[12.5px] leading-snug text-[hsl(var(--foreground))]">
-                  {session.title}
-                </p>
-                <p className="mt-0.5 text-[10px] text-[hsl(var(--muted-foreground))]">
-                  {timeAgo(session.updatedAt)}
-                </p>
-              </Link>
+                <Link
+                  href={`/?session=${session.id}`}
+                  className="min-w-0 flex-1 px-2.5 py-2"
+                >
+                  <p className="truncate text-[12.5px] leading-snug text-[hsl(var(--foreground))]">
+                    {session.title}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-[hsl(var(--muted-foreground))]">
+                    {timeAgo(session.updatedAt)}
+                  </p>
+                </Link>
+                <button
+                  onClick={e => { e.preventDefault(); e.stopPropagation(); deleteSession(session.id) }}
+                  aria-label="Delete chat"
+                  className="mr-1.5 shrink-0 rounded-md p-1 text-[hsl(var(--muted-foreground))] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              </div>
             ))}
           </nav>
         )}
@@ -206,17 +204,8 @@ export function CompareView() {
 
     router.replace(`/compare?a=${encodeURIComponent(a.trim())}&b=${encodeURIComponent(b.trim())}`, { scroll: false })
 
-    try {
-      // Phase 1: insights only — show cards fast
-      const [dA, dB] = await Promise.all([
-        fetchInsights(a.trim()),
-        fetchInsights(b.trim()),
-      ])
-      setCompareA(dA)
-      setCompareB(dB)
-      setInsightsLoading(false)
-
-      // Phase 2: trends in background — chart appears after
+    // Start trends in parallel with insights — chart appears as soon as it's ready
+    const trendsPromise = (async () => {
       try {
         const [tdA, tdB] = await Promise.all([
           fetchTrends(a.trim()),
@@ -238,13 +227,26 @@ export function CompareView() {
         setChartData({ "7d": mergeRange("7d"), "30d": mergeRange("30d"), "90d": mergeRange("90d") })
       } catch {
         // Trends are best-effort; chart data remains null (no chart shown)
+      } finally {
+        setTrendsLoading(false)
       }
+    })()
+
+    try {
+      // Insights — show cards as fast as possible (independent of trends)
+      const [dA, dB] = await Promise.all([
+        fetchInsights(a.trim()),
+        fetchInsights(b.trim()),
+      ])
+      setCompareA(dA)
+      setCompareB(dB)
     } catch (err) {
       setCompareError(err instanceof Error ? err.message : "Comparison failed. Please try again.")
-      setInsightsLoading(false)
     } finally {
-      setTrendsLoading(false)
+      setInsightsLoading(false)
     }
+
+    await trendsPromise
   }, [router])
 
   // Auto-run when page loads with URL params

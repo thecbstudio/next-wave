@@ -6,7 +6,7 @@ import {
   TrendingUp, ArrowLeft, Info,
   BarChart2, Zap,
   MessageCircle, RefreshCcw,
-  SquarePen, Settings, GitCompare, LogOut,
+  SquarePen, Settings, GitCompare, LogOut, Trash2,
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -101,7 +101,7 @@ function timeAgo(iso: string): string {
 }
 
 function LightSidebar() {
-  const { sessions } = useChatHistory()
+  const { sessions, deleteSession } = useChatHistory()
 
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
@@ -150,18 +150,29 @@ function LightSidebar() {
         ) : (
           <nav className="space-y-0.5">
             {sessions.map((session: ChatSession) => (
-              <Link
+              <div
                 key={session.id}
-                href={`/?session=${session.id}`}
-                className="flex w-full flex-col rounded-lg px-2.5 py-2 transition-colors hover:bg-[hsl(var(--muted))]"
+                className="group flex w-full items-center gap-1 rounded-lg transition-colors hover:bg-[hsl(var(--muted))]"
               >
-                <p className="truncate text-[12.5px] leading-snug text-[hsl(var(--foreground))]">
-                  {session.title}
-                </p>
-                <p className="mt-0.5 text-[10px] text-[hsl(var(--muted-foreground))]">
-                  {timeAgo(session.updatedAt)}
-                </p>
-              </Link>
+                <Link
+                  href={`/?session=${session.id}`}
+                  className="min-w-0 flex-1 px-2.5 py-2"
+                >
+                  <p className="truncate text-[12.5px] leading-snug text-[hsl(var(--foreground))]">
+                    {session.title}
+                  </p>
+                  <p className="mt-0.5 text-[10px] text-[hsl(var(--muted-foreground))]">
+                    {timeAgo(session.updatedAt)}
+                  </p>
+                </Link>
+                <button
+                  onClick={e => { e.preventDefault(); e.stopPropagation(); deleteSession(session.id) }}
+                  aria-label="Delete chat"
+                  className="mr-1.5 shrink-0 rounded-md p-1 text-[hsl(var(--muted-foreground))] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              </div>
             ))}
           </nav>
         )}
