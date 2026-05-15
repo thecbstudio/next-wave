@@ -1,4 +1,5 @@
 ﻿import Anthropic from "@anthropic-ai/sdk"
+import { increment } from "@/lib/stats"
 
 function getSystemPrompt() {
   const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
@@ -118,6 +119,9 @@ export async function POST(req: Request) {
     if (data.error === "not_a_product") {
       return Response.json({ error: data.message || "Please provide a food or FMCG product." }, { status: 422 })
     }
+
+    // Track successful analysis (fire-and-forget)
+    increment("analyses").catch(() => {})
 
     return Response.json(data)
   } catch (err) {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-const PUBLIC = ["/login", "/api/auth", "/landing"]
+const PUBLIC = ["/login", "/api/auth", "/landing", "/api/stats"]
 
 // n8n API routes — protected by X-API-Key header instead of cookie
 const API_KEY_ROUTES = ["/api/n8n"]

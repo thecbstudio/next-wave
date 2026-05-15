@@ -1,4 +1,5 @@
 ﻿import Anthropic from "@anthropic-ai/sdk"
+import { increment } from "@/lib/stats"
 
 function getSystemPrompt() {
   const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
@@ -23,6 +24,10 @@ export async function POST(req: Request) {
   }
 
   const { messages } = await req.json()
+
+  // Track every user message sent (fire-and-forget)
+  increment("chat_messages").catch(() => {})
+
   const client = new Anthropic({ apiKey })
   const encoder = new TextEncoder()
 
