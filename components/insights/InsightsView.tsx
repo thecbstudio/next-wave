@@ -99,8 +99,15 @@ function timeAgo(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" })
 }
 
-function LightSidebar({ onSelectProduct }: { onSelectProduct: (name: string) => void }) {
-  const { history, removeItem } = useInsightsHistory()
+function LightSidebar({
+  history,
+  removeItem,
+  onSelectProduct,
+}: {
+  history: ReturnType<typeof useInsightsHistory>["history"]
+  removeItem: ReturnType<typeof useInsightsHistory>["removeItem"]
+  onSelectProduct: (name: string) => void
+}) {
 
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
@@ -218,7 +225,7 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
 type Range = "7d" | "30d" | "90d"
 
 export function InsightsView() {
-  const { addItem } = useInsightsHistory()
+  const { history, addItem, removeItem } = useInsightsHistory()
 
   // ── Analyze state ─────────────────────────────────────────────────────────
   const [query, setQuery] = useState("")
@@ -309,7 +316,7 @@ export function InsightsView() {
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-[hsl(var(--surface))]">
-      <LightSidebar onSelectProduct={name => { setQuery(name); handleAnalyze(name) }} />
+      <LightSidebar history={history} removeItem={removeItem} onSelectProduct={name => { setQuery(name); handleAnalyze(name) }} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}

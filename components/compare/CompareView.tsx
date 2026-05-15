@@ -66,8 +66,15 @@ function timeAgo(iso: string): string {
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
-function CompareSidebar({ onSelect }: { onSelect: (a: string, b: string) => void }) {
-  const { history, removeItem } = useCompareHistory()
+function CompareSidebar({
+  history,
+  removeItem,
+  onSelect,
+}: {
+  history: ReturnType<typeof useCompareHistory>["history"]
+  removeItem: ReturnType<typeof useCompareHistory>["removeItem"]
+  onSelect: (a: string, b: string) => void
+}) {
 
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
@@ -181,7 +188,7 @@ function CompareLogout() {
 export function CompareView() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { addItem } = useCompareHistory()
+  const { history, addItem, removeItem } = useCompareHistory()
 
   const [queryA, setQueryA] = useState(searchParams.get("a") ?? "")
   const [queryB, setQueryB] = useState(searchParams.get("b") ?? "")
@@ -291,7 +298,7 @@ export function CompareView() {
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-[hsl(var(--surface))]">
-      <CompareSidebar onSelect={(a, b) => { setQueryA(a); setQueryB(b); runCompare(a, b) }} />
+      <CompareSidebar history={history} removeItem={removeItem} onSelect={(a, b) => { setQueryA(a); setQueryB(b); runCompare(a, b) }} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
