@@ -14,7 +14,7 @@ Your expertise:
 Your tone: Confident, data-driven, and specific. Use real numbers, timeframes, and demographic breakdowns when relevant. Format responses with **bold** for key insights and use bullet points for structured data. Be concise but impactful — every sentence should carry signal, not noise.`
 }
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY
