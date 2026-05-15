@@ -4,11 +4,11 @@ let redis: Redis | null = null
 
 function getRedis(): Redis | null {
   try {
-    if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null
-    if (!redis) redis = new Redis({
-      url: process.env.UPSTASH_REDIS_REST_URL,
-      token: process.env.UPSTASH_REDIS_REST_TOKEN,
-    })
+    // Vercel's Upstash integration uses KV_REST_API_URL / KV_REST_API_TOKEN
+    const url = process.env.KV_REST_API_URL
+    const token = process.env.KV_REST_API_TOKEN
+    if (!url || !token) return null
+    if (!redis) redis = new Redis({ url, token })
     return redis
   } catch {
     return null
