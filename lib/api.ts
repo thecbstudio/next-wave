@@ -28,14 +28,14 @@ async function post<T>(path: string, body: Record<string, unknown>): Promise<T> 
     body: JSON.stringify(body),
   })
 
+  if (!res.ok) {
+    throw new Error("Analysis failed — please try again")
+  }
+
   const data = await res.json()
 
   if (data?.error === "not_a_product") {
     throw new Error("Please enter a food or FMCG product name")
-  }
-
-  if (!res.ok) {
-    throw new Error("Analysis failed — please try again")
   }
 
   if (data?.error) {
