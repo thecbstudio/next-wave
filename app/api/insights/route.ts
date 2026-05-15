@@ -46,7 +46,7 @@ Return ONLY valid JSON (no markdown, no explanation):
 }`
 }
 
-export const runtime = "nodejs"
+export const runtime = "edge"
 
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY

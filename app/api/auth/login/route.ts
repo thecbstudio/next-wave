@@ -1,4 +1,4 @@
-export const runtime = "nodejs"
+﻿export const runtime = "edge"
 
 export async function POST(req: Request) {
   const { password } = await req.json()

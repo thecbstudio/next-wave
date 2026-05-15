@@ -1,4 +1,4 @@
-export const runtime = "nodejs"
+﻿export const runtime = "edge"
 
 export async function POST() {
   const res = Response.json({ ok: true })

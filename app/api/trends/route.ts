@@ -1,6 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk"
+﻿import Anthropic from "@anthropic-ai/sdk"
 
-export const runtime = "nodejs"
+export const runtime = "edge"
 
 const SYSTEM_PROMPT = `You are a trend data analyst. Generate realistic historical trend data for a product based on your knowledge of its actual market trajectory.
 
