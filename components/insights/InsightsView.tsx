@@ -17,8 +17,7 @@ import {
 import { fetchInsights, fetchTrends, InsightsResult } from "@/lib/api"
 import { InsightsSearchBar } from "./InsightsSearchBar"
 import { ScoreCards } from "./ScoreCards"
-import { useChatHistory } from "@/hooks/useChatHistory"
-import type { ChatSession } from "@/hooks/useChatHistory"
+import { useInsightsHistory } from "@/hooks/useInsightsHistory"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -100,8 +99,8 @@ function timeAgo(iso: string): string {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" })
 }
 
-function LightSidebar() {
-  const { sessions, deleteSession } = useChatHistory()
+function LightSidebar({ onSelectProduct }: { onSelectProduct: (name: string) => void }) {
+  const { history, removeItem } = useInsightsHistory()
 
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
@@ -145,29 +144,29 @@ function LightSidebar() {
       </div>
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3">
         <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">Recent</p>
-        {sessions.length === 0 ? (
-          <p className="px-2 py-1.5 text-xs text-[hsl(var(--muted-foreground))]">No recent chats</p>
+        {history.length === 0 ? (
+          <p className="px-2 py-1.5 text-xs text-[hsl(var(--muted-foreground))]">No recent analyses</p>
         ) : (
           <nav className="space-y-0.5">
-            {sessions.map((session: ChatSession) => (
+            {history.map(item => (
               <div
-                key={session.id}
+                key={item.id}
                 className="group flex w-full items-center gap-1 rounded-lg transition-colors hover:bg-[hsl(var(--muted))]"
               >
-                <Link
-                  href={`/?session=${session.id}`}
-                  className="min-w-0 flex-1 px-2.5 py-2"
+                <button
+                  onClick={() => onSelectProduct(item.productName)}
+                  className="min-w-0 flex-1 px-2.5 py-2 text-left"
                 >
                   <p className="truncate text-[12.5px] leading-snug text-[hsl(var(--foreground))]">
-                    {session.title}
+                    {item.productName}
                   </p>
                   <p className="mt-0.5 text-[10px] text-[hsl(var(--muted-foreground))]">
-                    {timeAgo(session.updatedAt)}
+                    {timeAgo(item.analyzedAt)}
                   </p>
-                </Link>
+                </button>
                 <button
-                  onClick={e => { e.preventDefault(); e.stopPropagation(); deleteSession(session.id) }}
-                  aria-label="Delete chat"
+                  onClick={() => removeItem(item.id)}
+                  aria-label="Remove"
                   className="mr-1.5 shrink-0 rounded-md p-1 text-[hsl(var(--muted-foreground))] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
                 >
                   <Trash2 className="h-3 w-3" />
@@ -219,6 +218,8 @@ function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: 
 type Range = "7d" | "30d" | "90d"
 
 export function InsightsView() {
+  const { addItem } = useInsightsHistory()
+
   // ── Analyze state ─────────────────────────────────────────────────────────
   const [query, setQuery] = useState("")
   const [imageName, setImageName] = useState<string | null>(null)
@@ -259,8 +260,8 @@ export function InsightsView() {
 
   // ── Analyze ────────────────────────────────────────────────────────────────
 
-  const handleAnalyze = useCallback(async () => {
-    const productName = query.trim()
+  const handleAnalyze = useCallback(async (overrideName?: string) => {
+    const productName = (overrideName ?? query).trim()
     if (!productName && !imageFile) return
     setAnalyzing(true); setResult(null); setSummary(""); setError(null); setWikiTitle(null)
     try {
@@ -294,6 +295,7 @@ export function InsightsView() {
       }
 
       setResult({ ...data, chartData })
+      addItem(productLabel)
       streamSummary(productLabel, { scores: data.scores, badge: data.badge, category: data.category })
     } catch (err) {
       setError(err instanceof Error ? err.message : "Analysis failed. Please try again.")
@@ -307,7 +309,7 @@ export function InsightsView() {
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-[hsl(var(--surface))]">
-      <LightSidebar />
+      <LightSidebar onSelectProduct={name => { setQuery(name); handleAnalyze(name) }} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
@@ -357,7 +359,7 @@ export function InsightsView() {
                       className="mb-5 flex items-center justify-between gap-4 rounded-2xl border border-red-200 bg-red-50 px-5 py-4"
                     >
                       <p className="text-sm text-red-600">{error}</p>
-                      <button onClick={handleAnalyze}
+                      <button onClick={() => handleAnalyze()}
                         className="shrink-0 flex items-center gap-1.5 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
                       >
                         <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">

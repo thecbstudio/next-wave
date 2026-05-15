@@ -16,8 +16,7 @@ import {
 import { fetchInsights, fetchTrends, InsightsResult } from "@/lib/api"
 import { MetricRow } from "./MetricRow"
 import { DualTooltip } from "./DualTooltip"
-import { useChatHistory } from "@/hooks/useChatHistory"
-import type { ChatSession } from "@/hooks/useChatHistory"
+import { useCompareHistory } from "@/hooks/useCompareHistory"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -67,8 +66,8 @@ function timeAgo(iso: string): string {
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 
-function CompareSidebar() {
-  const { sessions, deleteSession } = useChatHistory()
+function CompareSidebar({ onSelect }: { onSelect: (a: string, b: string) => void }) {
+  const { history, removeItem } = useCompareHistory()
 
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
@@ -121,29 +120,29 @@ function CompareSidebar() {
 
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3">
         <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">Recent</p>
-        {sessions.length === 0 ? (
-          <p className="px-2 py-1.5 text-xs text-[hsl(var(--muted-foreground))]">No recent chats</p>
+        {history.length === 0 ? (
+          <p className="px-2 py-1.5 text-xs text-[hsl(var(--muted-foreground))]">No recent comparisons</p>
         ) : (
           <nav className="space-y-0.5">
-            {sessions.map((session: ChatSession) => (
+            {history.map(item => (
               <div
-                key={session.id}
+                key={item.id}
                 className="group flex w-full items-center gap-1 rounded-lg transition-colors hover:bg-[hsl(var(--muted))]"
               >
-                <Link
-                  href={`/?session=${session.id}`}
-                  className="min-w-0 flex-1 px-2.5 py-2"
+                <button
+                  onClick={() => onSelect(item.productA, item.productB)}
+                  className="min-w-0 flex-1 px-2.5 py-2 text-left"
                 >
                   <p className="truncate text-[12.5px] leading-snug text-[hsl(var(--foreground))]">
-                    {session.title}
+                    {item.productA} vs {item.productB}
                   </p>
                   <p className="mt-0.5 text-[10px] text-[hsl(var(--muted-foreground))]">
-                    {timeAgo(session.updatedAt)}
+                    {timeAgo(item.comparedAt)}
                   </p>
-                </Link>
+                </button>
                 <button
-                  onClick={e => { e.preventDefault(); e.stopPropagation(); deleteSession(session.id) }}
-                  aria-label="Delete chat"
+                  onClick={() => removeItem(item.id)}
+                  aria-label="Remove"
                   className="mr-1.5 shrink-0 rounded-md p-1 text-[hsl(var(--muted-foreground))] opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
                 >
                   <Trash2 className="h-3 w-3" />
@@ -182,6 +181,7 @@ function CompareLogout() {
 export function CompareView() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { addItem } = useCompareHistory()
 
   const [queryA, setQueryA] = useState(searchParams.get("a") ?? "")
   const [queryB, setQueryB] = useState(searchParams.get("b") ?? "")
@@ -240,6 +240,7 @@ export function CompareView() {
       ])
       setCompareA(dA)
       setCompareB(dB)
+      addItem(a.trim(), b.trim())
     } catch (err) {
       setCompareError(err instanceof Error ? err.message : "Comparison failed. Please try again.")
     } finally {
@@ -290,7 +291,7 @@ export function CompareView() {
 
   return (
     <div className="flex h-full w-full overflow-hidden bg-[hsl(var(--surface))]">
-      <CompareSidebar />
+      <CompareSidebar onSelect={(a, b) => { setQueryA(a); setQueryB(b); runCompare(a, b) }} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}

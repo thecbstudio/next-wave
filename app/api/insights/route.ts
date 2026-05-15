@@ -102,8 +102,8 @@ export async function POST(req: Request) {
   }
 
   const message = await client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 1500,
+    model: image ? "claude-sonnet-4-6" : "claude-haiku-4-5",
+    max_tokens: 1024,
     system: getSystemPrompt(),
     messages: [{ role: "user", content }],
   })
