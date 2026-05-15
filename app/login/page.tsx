@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
@@ -50,7 +50,7 @@ export default function LoginPage() {
             <TrendingUp className="h-6 w-6 text-white" strokeWidth={2.5} />
           </div>
           <div className="text-center">
-            <h1 className="text-xl font-bold tracking-tight text-[hsl(var(--foreground))]">TrendPulse</h1>
+            <h1 className="text-xl font-bold tracking-tight text-[hsl(var(--foreground))]">Next Wave</h1>
             <p className="mt-1 text-sm text-[hsl(var(--muted-foreground))]">Enter password to continue</p>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-4 text-center text-xs text-[hsl(var(--muted-foreground))]">
-          TrendPulse AI · Viral Trend Intelligence
+          Next Wave AI · Viral Trend Intelligence
         </p>
       </div>
     </div>

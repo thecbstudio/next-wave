@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useRouter } from "next/navigation"
 import Link from "next/link"
@@ -66,7 +66,7 @@ export default function SettingsPage() {
 
         {/* Account */}
         <Section title="Account">
-          <Row label="Status" description="You are signed in to TrendPulse">
+          <Row label="Status" description="You are signed in to Next Wave">
             <Badge color="green">Active</Badge>
           </Row>
           <Row label="Auth method" description="Password-based session (30 days)">
@@ -128,7 +128,7 @@ export default function SettingsPage() {
 
         {/* About */}
         <Section title="About">
-          <Row label="TrendPulse" description="AI-powered viral trend intelligence for food & FMCG">
+          <Row label="Next Wave" description="AI-powered viral trend intelligence for food & FMCG">
             <Badge color="gray">v0.1</Badge>
           </Row>
           <Row label="Powered by" description="Anthropic Claude API">

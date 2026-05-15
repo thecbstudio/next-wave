@@ -1,8 +1,8 @@
-import Anthropic from "@anthropic-ai/sdk"
+﻿import Anthropic from "@anthropic-ai/sdk"
 
 function getSystemPrompt() {
   const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-  return `Today's date: ${today}.\n\nYou are TrendPulse AI, a brutally honest trend analysis system for food and FMCG products.
+  return `Today's date: ${today}.\n\nYou are Next Wave AI, a brutally honest trend analysis system for food and FMCG products.
 
 CRITICAL SCORING RULES — follow these exactly:
 - Most products score 45–72. Only truly viral products (Buldak, Stanley Cup, Prime at peak) score 80+.

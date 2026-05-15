@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -109,7 +109,7 @@ function LightSidebar() {
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--primary))]">
           <TrendingUp className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
         </div>
-        <span className="text-[14px] font-semibold tracking-tight text-[hsl(var(--foreground))]">TrendPulse</span>
+        <span className="text-[14px] font-semibold tracking-tight text-[hsl(var(--foreground))]">Next Wave</span>
       </div>
       <div className="px-3 pb-3">
         <Link href="/" className="flex w-full items-center gap-2.5 rounded-lg border border-[hsl(var(--border))] bg-white px-3 py-2 text-sm font-medium text-[hsl(var(--foreground))] shadow-sm transition-all hover:bg-[hsl(var(--muted))]">

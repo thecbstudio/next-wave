@@ -1,7 +1,7 @@
-import { InsightsView } from "@/components/insights/InsightsView"
+﻿import { InsightsView } from "@/components/insights/InsightsView"
 
 export const metadata = {
-  title: "Product Insights — TrendPulse",
+  title: "Product Insights — Next Wave",
 }
 
 export default function InsightsPage() {

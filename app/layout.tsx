@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+﻿import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 
@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "TrendPulse — Viral Trend Intelligence",
+  title: "Next Wave — Viral Trend Intelligence",
   description:
     "AI-powered prediction of viral food, student lifestyle, and youth internet trends before they go mainstream.",
 }

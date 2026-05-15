@@ -1,8 +1,8 @@
-import { Suspense } from "react"
+﻿import { Suspense } from "react"
 import { CompareView } from "@/components/compare/CompareView"
 
 export const metadata = {
-  title: "Compare Products — TrendPulse",
+  title: "Compare Products — Next Wave",
   description: "Compare two food or FMCG products head-to-head across trend metrics.",
 }
 

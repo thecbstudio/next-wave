@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -90,7 +90,7 @@ export function Sidebar({
           <TrendingUp className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
         </div>
         <span className="text-[14px] font-semibold tracking-tight text-[hsl(var(--foreground))]">
-          TrendPulse
+          Next Wave
         </span>
       </div>
 

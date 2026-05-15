@@ -1,6 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk"
+﻿import Anthropic from "@anthropic-ai/sdk"
 
-const SYSTEM_PROMPT = `You are TrendPulse AI, a trend intelligence analyst. Write a detailed, specific, data-rich analysis of the given product's viral potential and market position.
+const SYSTEM_PROMPT = `You are Next Wave AI, a trend intelligence analyst. Write a detailed, specific, data-rich analysis of the given product's viral potential and market position.
 
 Write 2-3 paragraphs covering:
 - Current viral drivers and cultural context (TikTok trends, Gen Z behavior, campus culture)

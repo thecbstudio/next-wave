@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
@@ -210,7 +210,7 @@ export function ChatView() {
             >
               <SquarePen className="h-4 w-4" />
             </button>
-            <span className="hidden sm:inline text-xs text-[hsl(var(--muted-foreground))]">TrendPulse AI</span>
+            <span className="hidden sm:inline text-xs text-[hsl(var(--muted-foreground))]">Next Wave AI</span>
           </div>
         </header>
 
