@@ -4,7 +4,6 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { TrendingUp, Zap, BarChart2, SquarePen, Settings, MessageCircle, Trash2, GitCompare, LogOut } from "lucide-react"
 import type { ChatSession } from "@/hooks/useChatHistory"
-import { SidebarStats } from "@/components/stats/LiveStats"
 
 const topics = [
   { icon: TrendingUp, label: "Viral Foods" },
@@ -220,9 +219,6 @@ export function Sidebar({
           </nav>
         )}
       </div>
-
-      {/* Live Stats */}
-      <SidebarStats />
 
       {/* Bottom */}
       <div className="border-t border-[hsl(var(--border))] p-2 space-y-0.5">
