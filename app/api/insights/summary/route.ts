@@ -9,7 +9,7 @@ Write 2-3 paragraphs covering:
 
 Use specific numbers, timeframes, and named platforms. Write in confident, analyst tone. No headers, no bullets — flowing prose only.`
 
-export const runtime = "edge"
+export const runtime = "nodejs"
 
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY
