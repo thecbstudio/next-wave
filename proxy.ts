@@ -6,7 +6,7 @@ const PUBLIC = ["/login", "/api/auth", "/landing", "/api/stats"]
 // n8n API routes — protected by X-API-Key header instead of cookie
 const API_KEY_ROUTES = ["/api/n8n"]
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   // Let public routes through

@@ -1,6 +1,4 @@
-﻿export const runtime = "edge"
-
-export async function POST(req: Request) {
+﻿export async function POST(req: Request) {
   const { password } = await req.json()
   const correct = process.env.AUTH_PASSWORD ?? "cinar2007"
 
