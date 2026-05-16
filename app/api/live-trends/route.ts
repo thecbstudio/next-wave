@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { after } from "next/server"
 import { Redis } from "@upstash/redis"
 
 export const runtime = "nodejs"
@@ -23,22 +24,28 @@ export async function POST(req: NextRequest) {
   }
 
   const jobId = crypto.randomUUID()
-  const appUrl = process.env.APP_URL || process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : "https://next-wave-three.vercel.app"
-  const callbackUrl = `${appUrl}/api/live-trends/callback`
+  const callbackUrl = "https://next-wave-three.vercel.app/api/live-trends/callback"
 
   const redis = getRedis()
   if (redis) {
     await redis.set(`livetrends:${jobId}`, JSON.stringify({ status: "processing" }), { ex: 300 })
   }
 
-  // Fire-and-forget — don't await N8N
-  fetch(webhookUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question, jobId, callbackUrl }),
-  }).catch(() => {})
+  after(async () => {
+    try {
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question, jobId, callbackUrl }),
+      })
+    } catch (err) {
+      console.error("N8N fetch error:", err)
+      const r = getRedis()
+      if (r) {
+        await r.set(`livetrends:${jobId}`, JSON.stringify({ status: "error", error: "Failed to reach N8N" }), { ex: 300 })
+      }
+    }
+  })
 
   return NextResponse.json({ jobId, status: "processing" })
 }
