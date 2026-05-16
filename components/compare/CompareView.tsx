@@ -79,7 +79,7 @@ function CompareSidebar({
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
       <div className="flex h-14 items-center gap-2.5 px-4">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--primary))]">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "linear-gradient(135deg, hsl(262,82%,60%), hsl(262,68%,42%))", boxShadow: "0 3px 8px hsl(262 72% 50% / 0.3)" }}>
           <TrendingUp className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
         </div>
         <span className="text-[14px] font-semibold tracking-tight text-[hsl(var(--foreground))]">Next Wave</span>
@@ -302,9 +302,9 @@ export function CompareView() {
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-[hsl(var(--border))] bg-white px-4 lg:px-8">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-[hsl(var(--border))] bg-white px-4 lg:px-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
           <div className="flex items-center gap-3">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--primary))]">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "linear-gradient(135deg, hsl(262,82%,60%), hsl(262,68%,42%))", boxShadow: "0 3px 8px hsl(262 72% 50% / 0.3)" }}>
               <GitCompare className="h-3.5 w-3.5 text-white" strokeWidth={2} />
             </div>
             <h1 className="text-[15px] font-semibold text-[hsl(var(--foreground))]">Product Comparison</h1>
@@ -320,7 +320,7 @@ export function CompareView() {
 
             {/* Search card */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}
-              className="mb-6 rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm"
+              className="mb-6 rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]"
             >
               <p className="mb-4 text-sm font-medium text-[hsl(var(--muted-foreground))]">Compare any two food or FMCG products</p>
 
@@ -434,7 +434,7 @@ export function CompareView() {
                   {/* Product cards skeleton */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[0, 1].map(i => (
-                      <div key={i} className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm">
+                      <div key={i} className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                         <div className="mb-3 h-3 w-16 animate-pulse rounded-full bg-[hsl(220_14%_92%)]" />
                         <div className="mb-4 h-5 w-3/4 animate-pulse rounded-full bg-[hsl(220_14%_90%)]" />
                         <div className="mb-4 h-6 w-28 animate-pulse rounded-lg bg-[hsl(220_14%_93%)]" />
@@ -447,7 +447,7 @@ export function CompareView() {
                   {/* Chart skeleton */}
                   <div className="h-64 animate-pulse rounded-2xl bg-[hsl(220_14%_92%)]" />
                   {/* Metrics skeleton */}
-                  <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm">
+                  <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                     <div className="mb-5 h-4 w-40 animate-pulse rounded-full bg-[hsl(220_14%_90%)]" />
                     <div className="space-y-6">
                       {[0,1,2,3,4,5].map(i => (
@@ -475,10 +475,10 @@ export function CompareView() {
                         "flex items-center gap-4 rounded-2xl border px-6 py-4",
                         winner.side === "tie"
                           ? "border-[hsl(var(--border))] bg-[hsl(var(--muted))]"
-                          : "border-[hsl(262_72%_50%/0.25)] bg-[hsl(262_72%_50%/0.05)]",
+                          : "border-[hsl(262_72%_50%/0.2)] bg-gradient-to-r from-[hsl(262_72%_50%/0.08)] to-[hsl(280_72%_50%/0.04)]",
                       ].join(" ")}
                     >
-                      <div className={["flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", winner.side === "tie" ? "bg-[hsl(var(--muted-foreground))]" : "bg-[hsl(var(--primary))]"].join(" ")}>
+                      <div className={["flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", winner.side === "tie" ? "bg-[hsl(var(--muted-foreground))]" : ""].join(" ")}>
                         {winner.side === "tie" ? <Minus className="h-5 w-5 text-white" strokeWidth={2.5} /> : <Trophy className="h-5 w-5 text-white" strokeWidth={2} />}
                       </div>
                       <div className="min-w-0 flex-1">
@@ -523,7 +523,7 @@ export function CompareView() {
                       { data: compareB, color: COLOR_B, label: "B" },
                     ] as const).map(({ data, color, label }, idx) => (
                       <motion.div key={idx} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + idx * 0.08 }}
-                        className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm"
+                        className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]"
                       >
                         {/* Label badge */}
                         <div className="mb-3 flex items-center justify-between">
@@ -566,7 +566,7 @@ export function CompareView() {
 
                   {/* Dual trend chart */}
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-                    className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm"
+                    className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]"
                   >
                     <div className="mb-4 flex items-center justify-between">
                       <div>
@@ -628,7 +628,7 @@ export function CompareView() {
 
                   {/* Metric comparison */}
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-                    className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm"
+                    className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]"
                   >
                     <div className="mb-6 grid grid-cols-[1fr_140px_1fr]">
                       <div className="flex items-center gap-2">
@@ -657,7 +657,7 @@ export function CompareView() {
 
                   {/* Signal grid */}
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                    className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm"
+                    className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]"
                   >
                     <h3 className="mb-5 text-sm font-semibold text-[hsl(var(--foreground))]">Signal Breakdown</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
