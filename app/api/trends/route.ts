@@ -44,7 +44,7 @@ export async function POST(req: Request) {
 
     const msg = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
+      max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [{
         role: "user",
@@ -53,13 +53,35 @@ Generate trend data for all three ranges.
 7d dates (8 points): ${buildLabels(7).join(", ")}
 30d dates (31 points): ${buildLabels(30).join(", ")}
 90d dates (91 points): ${buildLabels(90).join(", ")}
-Base values on this product's real trend trajectory.`,
+Base values on this product's real trend trajectory.
+Keep JSON compact - no extra whitespace.`,
       }],
     })
 
     const text = msg.content[0].type === "text" ? msg.content[0].text : ""
     const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim()
-    const parsed = JSON.parse(cleaned)
+
+    let parsed: Record<string, Array<{ date: string; value: number }>>
+    try {
+      parsed = JSON.parse(cleaned)
+    } catch {
+      const match = cleaned.match(/\{[\s\S]*\}/)
+      if (!match) {
+        console.error("Trends: no JSON object found in response")
+        return Response.json({ source: "none", data: { "7d": [], "30d": [], "90d": [] } })
+      }
+      try {
+        parsed = JSON.parse(match[0])
+      } catch {
+        const extract = (key: string) => {
+          const re = new RegExp(`"${key}"\\s*:\\s*(\\[[\\s\\S]*?\\])`, "m")
+          const m = cleaned.match(re)
+          if (!m) return []
+          try { return JSON.parse(m[1]) } catch { return [] }
+        }
+        parsed = { "7d": extract("7d"), "30d": extract("30d"), "90d": extract("90d") }
+      }
+    }
 
     return Response.json({
       source: "ai",
