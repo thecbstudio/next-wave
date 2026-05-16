@@ -23,11 +23,7 @@ Return ONLY valid JSON (no markdown, no explanation):
   "name": "Full product name",
   "category": "Product category (e.g. Instant Noodles, Energy Drinks, Snacks)",
   "badge": "One honest label: 'Peak Viral', 'Early Signal', 'Oversaturated', 'Declining', 'Niche Product', 'Rising Demand', 'Stable Market', etc.",
-  "scores": {
-    "growth": <number 0-100>,
-    "demand": <number 0-100>,
-    "momentum": <number 0-100>
-  },
+  "scores": { "growth": <0-100>, "demand": <0-100>, "momentum": <0-100> },
   "metrics": [
     { "id": "rise", "label": "Rise Probability", "description": "Statistical chance of significant growth", "score": <0-100>, "color": "#22C55E" },
     { "id": "demand", "label": "Current Demand", "description": "Current market interest and volume", "score": <0-100>, "color": "#F59E0B" },
@@ -48,6 +44,7 @@ Return ONLY valid JSON (no markdown, no explanation):
 }
 
 export const runtime = "nodejs"
+export const maxDuration = 30
 
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY
@@ -71,10 +68,7 @@ export async function POST(req: Request) {
   const content: ContentBlock[] = []
 
   if (image) {
-    content.push({
-      type: "image",
-      source: { type: "base64", media_type: safeMediaType, data: image },
-    })
+    content.push({ type: "image", source: { type: "base64", media_type: safeMediaType, data: image } })
     content.push({
       type: "text",
       text: product
@@ -82,10 +76,7 @@ export async function POST(req: Request) {
         : "Analyze this product image. First validate it's a food/FMCG product, then analyze for viral trend potential.",
     })
   } else {
-    content.push({
-      type: "text",
-      text: `Analyze this product for viral trend potential: ${product}`,
-    })
+    content.push({ type: "text", text: `Analyze this product for viral trend potential: ${product}` })
   }
 
   const message = await client.messages.create({
@@ -100,12 +91,10 @@ export async function POST(req: Request) {
   try {
     const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim()
     const data = JSON.parse(cleaned)
-
     if (data.error === "not_a_product") {
       return Response.json({ error: data.message || "Please provide a food or FMCG product." }, { status: 422 })
     }
-
-    await increment("analyses")
+    increment("analyses").catch(() => {})
     return Response.json(data)
   } catch {
     return Response.json({ error: "Failed to parse analysis" }, { status: 500 })
