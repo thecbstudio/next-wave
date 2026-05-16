@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -86,10 +86,24 @@ export function Sidebar({
 
       {/* Logo */}
       <div className="flex h-14 items-center gap-2.5 px-4">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--primary))]">
-          <TrendingUp className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
+        <div
+          className="flex h-8 w-8 items-center justify-center rounded-lg shadow-md"
+          style={{
+            background: "linear-gradient(135deg, hsl(262,82%,60%), hsl(262,68%,42%))",
+            boxShadow: "0 4px 12px hsl(262 72% 50% / 0.35), 0 1px 3px hsl(262 72% 50% / 0.2)",
+          }}
+        >
+          <TrendingUp className="h-4 w-4 text-white" strokeWidth={2.5} />
         </div>
-        <span className="text-[14px] font-semibold tracking-tight text-[hsl(var(--foreground))]">
+        <span
+          className="text-[14px] font-bold tracking-tight"
+          style={{
+            background: "linear-gradient(135deg, hsl(262,72%,44%), hsl(280,72%,54%))",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
           Next Wave
         </span>
       </div>
@@ -111,7 +125,7 @@ export function Sidebar({
 
       {/* Topics */}
       <div className="mt-4 px-3">
-        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">
+        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[hsl(var(--muted-foreground))]">
           Topics
         </p>
         <nav className="space-y-0.5" aria-label="Topic navigation">
@@ -125,7 +139,7 @@ export function Sidebar({
                 className={[
                   "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-all",
                   isActive
-                    ? "bg-[hsl(262_72%_50%/0.1)] font-medium text-[hsl(var(--primary))]"
+                    ? "bg-[hsl(262_72%_50%/0.1)] font-semibold text-[hsl(var(--primary))] ring-1 ring-inset ring-[hsl(262_72%_50%/0.18)]"
                     : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]",
                 ].join(" ")}
               >
@@ -139,13 +153,13 @@ export function Sidebar({
 
       {/* Pages */}
       <div className="mt-4 px-3">
-        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">
+        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[hsl(var(--muted-foreground))]">
           Pages
         </p>
         <nav className="space-y-0.5" aria-label="Page navigation">
           <span
             aria-current="page"
-            className="flex w-full items-center gap-2.5 rounded-lg bg-[hsl(262_72%_50%/0.08)] px-2.5 py-2 text-sm font-medium text-[hsl(var(--primary))]"
+            className="flex w-full items-center gap-2.5 rounded-lg bg-[hsl(262_72%_50%/0.1)] px-2.5 py-2 text-sm font-semibold text-[hsl(var(--primary))] ring-1 ring-inset ring-[hsl(262_72%_50%/0.18)]"
           >
             <MessageCircle className="h-4 w-4 shrink-0" />
             Trend Chat
@@ -176,7 +190,7 @@ export function Sidebar({
 
       {/* Recent chats */}
       <div className="mt-4 min-h-0 flex-1 overflow-y-auto px-3">
-        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[hsl(var(--muted-foreground))]">
+        <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-[hsl(var(--muted-foreground))]">
           Recent
         </p>
 
@@ -192,7 +206,7 @@ export function Sidebar({
                   className={[
                     "group flex w-full items-center gap-1 rounded-lg transition-colors",
                     isActive
-                      ? "bg-[hsl(262_72%_50%/0.08)]"
+                      ? "bg-[hsl(262_72%_50%/0.08)] ring-1 ring-inset ring-[hsl(262_72%_50%/0.15)]"
                       : "hover:bg-[hsl(var(--muted))]",
                   ].join(" ")}
                 >
@@ -203,7 +217,7 @@ export function Sidebar({
                     <p className={[
                       "truncate text-[12.5px] leading-snug",
                       isActive
-                        ? "font-medium text-[hsl(var(--primary))]"
+                        ? "font-semibold text-[hsl(var(--primary))]"
                         : "text-[hsl(var(--foreground))]",
                     ].join(" ")}>
                       {session.title}
