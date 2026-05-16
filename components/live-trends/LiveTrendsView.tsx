@@ -33,7 +33,10 @@ export function LiveTrendsView() {
       }
 
       const data = await res.json()
-      setResult(data.result ?? data.output ?? JSON.stringify(data, null, 2))
+      const text = data.answer ?? data.result ?? data.output
+      const cleaned = typeof text === "string" ? text.replace(/\n/g, "
+") : JSON.stringify(data, null, 2)
+      setResult(cleaned)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
     } finally {
