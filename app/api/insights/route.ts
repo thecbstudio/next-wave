@@ -1,4 +1,4 @@
-﻿import Anthropic from "@anthropic-ai/sdk"
+import Anthropic from "@anthropic-ai/sdk"
 import { increment } from "@/lib/stats"
 
 function getSystemPrompt() {
@@ -58,22 +58,8 @@ export async function POST(req: Request) {
 
   if (!product && !image) return Response.json({ error: "No product provided" }, { status: 400 })
 
-  // n8n fallback
-  const n8nUrl = process.env.N8N_WEBHOOK_URL
-  if (n8nUrl && !image) {
-    try {
-      const n8nRes = await fetch(n8nUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ product }),
-      })
-      if (n8nRes.ok) return Response.json(await n8nRes.json())
-    } catch { /* fall through */ }
-  }
-
   const client = new Anthropic({ apiKey })
 
-  // Build message content — vision if image provided
   type SupportedMediaType = "image/jpeg" | "image/png" | "image/gif" | "image/webp"
   const validMediaTypes: SupportedMediaType[] = ["image/jpeg", "image/png", "image/gif", "image/webp"]
   const safeMediaType: SupportedMediaType = validMediaTypes.includes(mediaType) ? mediaType : "image/jpeg"
@@ -115,17 +101,13 @@ export async function POST(req: Request) {
     const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim()
     const data = JSON.parse(cleaned)
 
-    // Handle not-a-product validation error from Claude
     if (data.error === "not_a_product") {
       return Response.json({ error: data.message || "Please provide a food or FMCG product." }, { status: 422 })
     }
 
-    // Track successful analysis (fire-and-forget)
-    increment("analyses").catch(() => {})
-
+    await increment("analyses")
     return Response.json(data)
-  } catch (err) {
-    console.error("JSON parse error:", err, "\nRaw:", text.slice(0, 300))
+  } catch {
     return Response.json({ error: "Failed to parse analysis" }, { status: 500 })
   }
 }
