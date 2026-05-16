@@ -1,8 +1,8 @@
-﻿"use client"
+"use client"
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { TrendingUp, Zap, BarChart2, SquarePen, Settings, MessageCircle, Trash2, GitCompare, LogOut } from "lucide-react"
+import { TrendingUp, Zap, BarChart2, SquarePen, Settings, MessageCircle, Trash2, GitCompare, LogOut, Radio } from "lucide-react"
 import type { ChatSession } from "@/hooks/useChatHistory"
 
 const topics = [
@@ -163,6 +163,13 @@ export function Sidebar({
           >
             <GitCompare className="h-4 w-4 shrink-0" />
             Compare
+          </Link>
+          <Link
+            href="/live-trends"
+            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
+          >
+            <Radio className="h-4 w-4 shrink-0" />
+            Live Trends
           </Link>
         </nav>
       </div>
