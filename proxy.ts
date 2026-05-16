@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-const PUBLIC = ["/login", "/api/auth", "/landing", "/api/stats"]
+const PUBLIC = ["/login", "/api/auth", "/landing", "/api/stats", "/api/live-trends/callback", "/api/live-trends/status"]
 const API_KEY_ROUTES = ["/api/n8n"]
 
 export function proxy(request: NextRequest) {
