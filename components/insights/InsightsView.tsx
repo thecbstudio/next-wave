@@ -112,7 +112,7 @@ function LightSidebar({
   return (
     <aside className="hidden lg:flex h-full w-[240px] shrink-0 flex-col border-r border-[hsl(var(--border))] bg-[hsl(var(--surface))]">
       <div className="flex h-14 items-center gap-2.5 px-4">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(var(--primary))]">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "linear-gradient(135deg, hsl(262,82%,60%), hsl(262,68%,42%))", boxShadow: "0 3px 8px hsl(262 72% 50% / 0.3)" }}>
           <TrendingUp className="h-3.5 w-3.5 text-white" strokeWidth={2.5} />
         </div>
         <span className="text-[14px] font-semibold tracking-tight text-[hsl(var(--foreground))]">Next Wave</span>
@@ -320,7 +320,7 @@ export function InsightsView() {
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-[hsl(var(--border))] bg-white px-4 lg:px-8">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-[hsl(var(--border))] bg-white px-4 lg:px-8 shadow-[0_1px_4px_rgba(0,0,0,0.05)]">
           <h1 className="text-[15px] font-semibold text-[hsl(var(--foreground))]">Product Insights</h1>
           <Link href="/" className="flex items-center gap-1.5 rounded-lg border border-[hsl(var(--border))] bg-white px-3 py-1.5 text-xs text-[hsl(var(--muted-foreground))] shadow-sm transition-colors hover:bg-[hsl(var(--muted))]">
             <ArrowLeft className="h-3.5 w-3.5" />Back to Chat
@@ -384,7 +384,7 @@ export function InsightsView() {
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="space-y-5">
                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                         {[0, 1, 2, 3].map(i => (
-                          <div key={i} className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm">
+                          <div key={i} className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                             {i === 0 ? (<>
                               <div className="mb-4 h-32 w-full animate-pulse rounded-xl bg-[hsl(220_14%_92%)]" />
                               <div className="h-3 w-16 animate-pulse rounded-full bg-[hsl(220_14%_92%)]" />
@@ -401,7 +401,7 @@ export function InsightsView() {
                       </div>
                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         {[0, 1, 2].map(i => (
-                          <div key={i} className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm">
+                          <div key={i} className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                             <div className="mb-4 h-4 w-32 animate-pulse rounded-full bg-[hsl(220_14%_90%)]" />
                             <div className="space-y-4">
                               {[0, 1, 2, 3, 4, 5].map(j => (
@@ -417,7 +417,7 @@ export function InsightsView() {
                           </div>
                         ))}
                       </div>
-                      <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm">
+                      <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                         <div className="mb-4 h-4 w-36 animate-pulse rounded-full bg-[hsl(220_14%_90%)]" />
                         <div className="space-y-2">
                           {[100, 90, 95, 75, 85, 60].map((w, i) => (
@@ -438,7 +438,7 @@ export function InsightsView() {
 
                       {/* Analytics grid */}
                       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm">
+                        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                           <h3 className="mb-4 text-sm font-semibold text-[hsl(var(--foreground))]">Detailed Analysis</h3>
                           <div className="space-y-4">
                             {result.metrics.map((m, i) => (
@@ -464,7 +464,7 @@ export function InsightsView() {
                         </div>
 
                         {/* Chart */}
-                        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm">
+                        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                           <div className="mb-4 flex items-center justify-between">
                             <h3 className="text-sm font-semibold text-[hsl(var(--foreground))]">Demand Over Time</h3>
                             <div className="flex rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--surface))] p-0.5">
@@ -501,7 +501,7 @@ export function InsightsView() {
                         </div>
 
                         {/* Key Signals */}
-                        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-sm">
+                        <div className="rounded-2xl border border-[hsl(var(--border))] bg-white p-5 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]">
                           <div className="mb-4 flex items-center gap-2">
                             <h3 className="text-sm font-semibold text-[hsl(var(--foreground))]">Key Signals</h3>
                             <span className="rounded-md bg-[hsl(var(--muted))] px-1.5 py-0.5 text-[11px] font-medium text-[hsl(var(--muted-foreground))]">{result.signals.length}</span>
@@ -526,7 +526,7 @@ export function InsightsView() {
 
                       {/* Insights Summary */}
                       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-                        className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-sm"
+                        className="rounded-2xl border border-[hsl(var(--border))] bg-white p-6 shadow-[0_1px_4px_rgba(0,0,0,0.07),0_4px_20px_rgba(0,0,0,0.05)]"
                       >
                         <div className="mb-4 flex items-center gap-2">
                           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(262_72%_50%/0.08)]">
