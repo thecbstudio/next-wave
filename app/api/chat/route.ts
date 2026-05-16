@@ -16,6 +16,7 @@ Your tone: Confident, data-driven, and specific. Use real numbers, timeframes, a
 }
 
 export const runtime = "nodejs"
+export const maxDuration = 60
 
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY
