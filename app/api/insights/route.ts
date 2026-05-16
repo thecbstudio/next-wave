@@ -1,8 +1,17 @@
 import Anthropic from "@anthropic-ai/sdk"
 import { increment } from "@/lib/stats"
 
-function getSystemPrompt() {
+function getSystemPrompt(hasImage: boolean) {
   const today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+  const validation = hasImage
+    ? `PRODUCT VALIDATION (images only):
+- If the image is NOT a food/beverage/FMCG consumer product (e.g. it's a person, animal, landscape, car, random object), return: {"error": "not_a_product", "message": "Please provide a food, beverage, or FMCG product to analyze."}
+- If it IS a product, proceed with full analysis.`
+    : `PRODUCT VALIDATION:
+- You are always given a food, beverage, or FMCG product name. NEVER return not_a_product for text-only inputs.
+- If the brand is unknown or regional, still analyze it — use "Regional Brand", "Emerging Brand", or "Unknown Brand" as badge and score conservatively (40–62).
+- Infer the product category from the name context (e.g. "Activus" could be a drink/snack brand — analyze accordingly).`
+
   return `Today's date: ${today}.\n\nYou are Next Wave AI, a brutally honest trend analysis system for food and FMCG products.
 
 CRITICAL SCORING RULES — follow these exactly:
@@ -10,19 +19,18 @@ CRITICAL SCORING RULES — follow these exactly:
 - A score above 85 must be exceptionally rare and justified.
 - Declining or oversaturated products (Dubai Chocolate after peak, fidget spinners, etc.) should score 35–55.
 - Niche or regional products that haven't gone viral: 40–65.
+- Unknown or unrecognized brands: score 38–58, be honest about limited data.
 - Do NOT inflate scores to be encouraging. Be an analyst, not a cheerleader.
 - Scores should reflect the CURRENT state, not potential. If it already peaked, demand and momentum drop.
 
-PRODUCT VALIDATION:
-- If the image or name is NOT a food/beverage/FMCG consumer product (e.g. it's a person, animal, landscape, car, random object), return: {"error": "not_a_product", "message": "Please provide a food, beverage, or FMCG product to analyze."}
-- If it IS a product, proceed with full analysis.
+${validation}
 
 Return ONLY valid JSON (no markdown, no explanation):
 
 {
   "name": "Full product name",
   "category": "Product category (e.g. Instant Noodles, Energy Drinks, Snacks)",
-  "badge": "One honest label: 'Peak Viral', 'Early Signal', 'Oversaturated', 'Declining', 'Niche Product', 'Rising Demand', 'Stable Market', etc.",
+  "badge": "One honest label: 'Peak Viral', 'Early Signal', 'Oversaturated', 'Declining', 'Niche Product', 'Rising Demand', 'Stable Market', 'Regional Brand', 'Emerging Brand', etc.",
   "scores": { "growth": <0-100>, "demand": <0-100>, "momentum": <0-100> },
   "metrics": [
     { "id": "rise", "label": "Rise Probability", "description": "Statistical chance of significant growth", "score": <0-100>, "color": "#22C55E" },
@@ -76,13 +84,16 @@ export async function POST(req: Request) {
         : "Analyze this product image. First validate it's a food/FMCG product, then analyze for viral trend potential.",
     })
   } else {
-    content.push({ type: "text", text: `Analyze this product for viral trend potential: ${product}` })
+    content.push({
+      type: "text",
+      text: `Analyze this food/FMCG product for viral trend potential: "${product}". This is a product name submitted by a user — always analyze it, even if you don't recognize the brand.`,
+    })
   }
 
   const message = await client.messages.create({
     model: image ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001",
     max_tokens: 1024,
-    system: getSystemPrompt(),
+    system: getSystemPrompt(!!image),
     messages: [{ role: "user", content }],
   })
 
