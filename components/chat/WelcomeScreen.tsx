@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { motion } from "framer-motion"
 import { TrendingUp, Zap, BarChart2, Flame } from "lucide-react"
@@ -22,7 +22,7 @@ const suggestions = [
   {
     icon: TrendingUp,
     title: "Predict the next meme-driven product moment",
-    description: "Internet culture × purchase intent",
+    description: "Internet culture x purchase intent",
   },
 ]
 
@@ -40,21 +40,37 @@ export function WelcomeScreen({ onSuggest }: WelcomeScreenProps) {
         transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
         className="mb-8 text-center"
       >
-        <div className="mb-4 flex justify-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--primary))] shadow-lg shadow-[hsl(262_72%_50%/0.25)]">
-            <TrendingUp className="h-5 w-5 text-white" strokeWidth={2.5} />
+        <div className="mb-5 flex justify-center">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl"
+            style={{
+              background: "linear-gradient(135deg, hsl(262,82%,62%), hsl(262,68%,42%))",
+              boxShadow: "0 6px 20px hsl(262 72% 50% / 0.4), 0 2px 6px hsl(262 72% 50% / 0.25)",
+            }}
+          >
+            <TrendingUp className="h-6 w-6 text-white" strokeWidth={2.5} />
           </div>
         </div>
-        <h1 className="mb-2 text-[22px] font-semibold tracking-tight text-[hsl(var(--foreground))]">
-          What trend are you hunting?
+        <h1 className="mb-2.5 text-[28px] font-bold tracking-tight text-[hsl(var(--foreground))]">
+          What trend are you{" "}
+          <span
+            style={{
+              background: "linear-gradient(135deg, hsl(262,72%,50%), hsl(280,72%,60%))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            hunting?
+          </span>
         </h1>
-        <p className="max-w-[340px] text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+        <p className="max-w-[360px] text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
           Viral food moments, campus culture shifts, FMCG signals — before they go mainstream.
         </p>
       </motion.div>
 
       {/* Cards */}
-      <div className="grid w-full max-w-xl grid-cols-2 gap-2.5">
+      <div className="grid w-full max-w-xl grid-cols-2 gap-3">
         {suggestions.map(({ icon: Icon, title, description }, i) => (
           <motion.button
             key={title}
@@ -64,16 +80,28 @@ export function WelcomeScreen({ onSuggest }: WelcomeScreenProps) {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => onSuggest(title)}
-            className="group flex flex-col gap-2.5 rounded-xl border border-[hsl(var(--border))] bg-white p-4 text-left shadow-sm transition-all hover:border-[hsl(262_72%_50%/0.35)] hover:shadow-md"
+            className="group flex flex-col gap-3 rounded-2xl border border-[hsl(var(--border))] bg-white p-4 text-left transition-all"
+            style={{
+              boxShadow: "0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04)",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.1), 0 0 0 1.5px hsl(262 72% 50% / 0.25)"
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04)"
+            }}
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[hsl(262_72%_50%/0.08)] transition-colors group-hover:bg-[hsl(262_72%_50%/0.14)]">
-              <Icon className="h-3.5 w-3.5 text-[hsl(var(--primary))]" />
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-xl transition-all group-hover:scale-110"
+              style={{ background: "hsl(262 72% 50% / 0.1)" }}
+            >
+              <Icon className="h-4 w-4 text-[hsl(var(--primary))]" />
             </div>
             <div>
-              <p className="text-[13px] font-medium leading-snug text-[hsl(var(--foreground))]">
+              <p className="text-[13px] font-semibold leading-snug text-[hsl(var(--foreground))]">
                 {title}
               </p>
-              <p className="mt-0.5 text-xs text-[hsl(var(--muted-foreground))]">
+              <p className="mt-1 text-xs text-[hsl(var(--muted-foreground))]">
                 {description}
               </p>
             </div>
