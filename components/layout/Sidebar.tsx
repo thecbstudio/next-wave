@@ -1,7 +1,7 @@
 ﻿"use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { TrendingUp, Zap, BarChart2, SquarePen, Settings, MessageCircle, Trash2, GitCompare, LogOut, Radio } from "lucide-react"
 import type { ChatSession } from "@/hooks/useChatHistory"
 
@@ -68,6 +68,15 @@ export function Sidebar({
   mobileOpen = false,
   onMobileClose,
 }: SidebarProps) {
+  const pathname = usePathname()
+
+  const pages = [
+    { href: "/", icon: MessageCircle, label: "Trend Chat" },
+    { href: "/insights", icon: BarChart2, label: "Product Insights" },
+    { href: "/compare", icon: GitCompare, label: "Compare" },
+    { href: "/live-trends", icon: Radio, label: "Live Trends" },
+  ]
+
   return (
     <>
       {/* Mobile backdrop */}
@@ -157,34 +166,25 @@ export function Sidebar({
           Pages
         </p>
         <nav className="space-y-0.5" aria-label="Page navigation">
-          <span
-            aria-current="page"
-            className="flex w-full items-center gap-2.5 rounded-lg bg-[hsl(262_72%_50%/0.1)] px-2.5 py-2 text-sm font-semibold text-[hsl(var(--primary))] ring-1 ring-inset ring-[hsl(262_72%_50%/0.18)]"
-          >
-            <MessageCircle className="h-4 w-4 shrink-0" />
-            Trend Chat
-          </span>
-          <Link
-            href="/insights"
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-          >
-            <BarChart2 className="h-4 w-4 shrink-0" />
-            Product Insights
-          </Link>
-          <Link
-            href="/compare"
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-          >
-            <GitCompare className="h-4 w-4 shrink-0" />
-            Compare
-          </Link>
-          <Link
-            href="/live-trends"
-            className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-[hsl(var(--muted-foreground))] transition-colors hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]"
-          >
-            <Radio className="h-4 w-4 shrink-0" />
-            Live Trends
-          </Link>
+          {pages.map(({ href, icon: Icon, label }) => {
+            const isActive = pathname === href
+            return (
+              <Link
+                key={href}
+                href={href}
+                aria-current={isActive ? "page" : undefined}
+                className={[
+                  "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors",
+                  isActive
+                    ? "bg-[hsl(262_72%_50%/0.1)] font-semibold text-[hsl(var(--primary))] ring-1 ring-inset ring-[hsl(262_72%_50%/0.18)]"
+                    : "text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--muted))] hover:text-[hsl(var(--foreground))]",
+                ].join(" ")}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {label}
+              </Link>
+            )
+          })}
         </nav>
       </div>
 

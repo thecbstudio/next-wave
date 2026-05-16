@@ -80,7 +80,7 @@ export async function POST(req: Request) {
   }
 
   const message = await client.messages.create({
-    model: image ? "claude-sonnet-4-6" : "claude-haiku-4-5",
+    model: image ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001",
     max_tokens: 1024,
     system: getSystemPrompt(),
     messages: [{ role: "user", content }],
