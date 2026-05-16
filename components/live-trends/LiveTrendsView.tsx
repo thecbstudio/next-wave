@@ -24,7 +24,7 @@ export function LiveTrendsView() {
       const res = await fetch("/api/live-trends", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query.trim() }),
+        body: JSON.stringify({ question: query.trim() }),
       })
 
       if (!res.ok) {
