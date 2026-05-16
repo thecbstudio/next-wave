@@ -1,4 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk"
+﻿import Anthropic from "@anthropic-ai/sdk"
 import { increment } from "@/lib/stats"
 
 function getSystemPrompt(hasImage: boolean) {
@@ -9,17 +9,17 @@ function getSystemPrompt(hasImage: boolean) {
 - If it IS a product, proceed with full analysis.`
     : `PRODUCT VALIDATION:
 - You are always given a food, beverage, or FMCG product name. NEVER return not_a_product for text-only inputs.
-- If the brand is unknown or regional, still analyze it — use "Regional Brand", "Emerging Brand", or "Unknown Brand" as badge and score conservatively (40–62).
-- Infer the product category from the name context (e.g. "Activus" could be a drink/snack brand — analyze accordingly).`
+- If the brand is unknown or regional, still analyze it â€” use "Regional Brand", "Emerging Brand", or "Unknown Brand" as badge and score conservatively (40â€“62).
+- Infer the product category from the name context (e.g. "Activus" could be a drink/snack brand â€” analyze accordingly).`
 
   return `Today's date: ${today}.\n\nYou are Next Wave AI, a brutally honest trend analysis system for food and FMCG products.
 
-CRITICAL SCORING RULES — follow these exactly:
-- Most products score 45–72. Only truly viral products (Buldak, Stanley Cup, Prime at peak) score 80+.
+CRITICAL SCORING RULES â€” follow these exactly:
+- Most products score 45â€“72. Only truly viral products (Buldak, Stanley Cup, Prime at peak) score 80+.
 - A score above 85 must be exceptionally rare and justified.
-- Declining or oversaturated products (Dubai Chocolate after peak, fidget spinners, etc.) should score 35–55.
-- Niche or regional products that haven't gone viral: 40–65.
-- Unknown or unrecognized brands: score 38–58, be honest about limited data.
+- Declining or oversaturated products (Dubai Chocolate after peak, fidget spinners, etc.) should score 35â€“55.
+- Niche or regional products that haven't gone viral: 40â€“65.
+- Unknown or unrecognized brands: score 38â€“58, be honest about limited data.
 - Do NOT inflate scores to be encouraging. Be an analyst, not a cheerleader.
 - Scores should reflect the CURRENT state, not potential. If it already peaked, demand and momentum drop.
 
@@ -86,28 +86,38 @@ export async function POST(req: Request) {
   } else {
     content.push({
       type: "text",
-      text: `Analyze this food/FMCG product for viral trend potential: "${product}". This is a product name submitted by a user — always analyze it, even if you don't recognize the brand.`,
+      text: `Analyze this food/FMCG product for viral trend potential: "${product}". This is a product name submitted by a user â€” always analyze it, even if you don't recognize the brand.`,
     })
   }
 
-  const message = await client.messages.create({
-    model: image ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001",
-    max_tokens: 1024,
-    system: getSystemPrompt(!!image),
-    messages: [{ role: "user", content }],
-  })
-
-  const text = message.content[0].type === "text" ? message.content[0].text : ""
-
   try {
+    const message = await client.messages.create({
+      model: image ? "claude-sonnet-4-6" : "claude-haiku-4-5-20251001",
+      max_tokens: 1024,
+      system: getSystemPrompt(!!image),
+      messages: [{ role: "user", content }],
+    })
+
+    const text = message.content[0].type === "text" ? message.content[0].text : ""
     const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim()
-    const data = JSON.parse(cleaned)
+
+    let data: Record<string, unknown>
+    try {
+      data = JSON.parse(cleaned)
+    } catch {
+      const match = cleaned.match(/\{[\s\S]*\}/)
+      if (!match) return Response.json({ error: "Failed to parse analysis" }, { status: 500 })
+      data = JSON.parse(match[0])
+    }
+
     if (data.error === "not_a_product") {
       return Response.json({ error: data.message || "Please provide a food or FMCG product." }, { status: 422 })
     }
     increment("analyses").catch(() => {})
     return Response.json(data)
-  } catch {
-    return Response.json({ error: "Failed to parse analysis" }, { status: 500 })
+  } catch (err) {
+    console.error("Insights API error:", err)
+    return Response.json({ error: "Analysis failed — please try again" }, { status: 500 })
   }
 }
+
